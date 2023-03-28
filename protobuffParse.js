@@ -32,4 +32,19 @@ const parse32 = (arr) => {
   }
 };
 
-module.exports = { parseBIG, parse32 };
+const base128 = number => {
+  let quotient = number
+  const digits = []
+  while (quotient > 0) {
+    digits.push(quotient % 128)
+    quotient = Math.floor(quotient / 128)
+  }
+  return digits
+}
+
+const makeInput = number => {
+  const digits = base128(number)
+  return new Uint8Array(digits.map((n, i) => i + 1 < digits.length ? 128 + n : n))
+}
+
+module.exports = { parseBIG, parse32, makeInput };

@@ -1,4 +1,4 @@
-const { parseBIG, parse32 } = require("./protobuffParse");
+const { parseBIG, parse32, makeInput } = require("./protobuffParse");
 
 const oneFifty = new Uint8Array([0x96, 0x01]);
 const oneFifties = new Uint8Array([0x96, 0x01, 0x96, 0x01]);
@@ -9,6 +9,7 @@ const maxUnsigned = new Uint8Array([0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x
 const negOneSigned = new Uint8Array([0xff, 0xff, 0xff, 0xff, 0x0f]);
 const maxPosSigned = new Uint8Array([0xff, 0xff, 0xff, 0xff, 0x07]);
 const maxNegSigned = new Uint8Array([0x80, 0x80, 0x80, 0x80, 0x08]);
+const sevenFives = new Uint8Array([227, 138, 211, 2])
 
 describe("parseBIG", () => {
   it("parses 150", () => {
@@ -29,6 +30,9 @@ describe("parseBIG", () => {
   it("parses 987654321", () => {
     expect(parseBIG(countDown)).toEqual(987654321n);
   });
+  it("parses 5555555", () => {
+    expect(parseBIG(sevenFives)).toEqual(5555555n)
+  })
 });
 
 describe("parse32", () => {
@@ -54,3 +58,12 @@ describe("parse32", () => {
     expect(parse32(maxPosSigned)).toEqual(2147483647);
   });
 });
+
+describe("makeInput", () => {
+  it("oneFifty", () => {
+    expect(makeInput(150)).toEqual(oneFifty)
+  })
+  it("negOneFifty", () => {
+    expect(makeInput(2**32 - 150)).toEqual(negOneFifty)
+  })
+})
